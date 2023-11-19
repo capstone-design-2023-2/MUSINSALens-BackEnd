@@ -1,0 +1,17 @@
+{
+    "database": {
+        "engine": "django.db.backends.mysql",
+        "name": "DATABASE",
+        "user": "USER",
+        "password": "PASSWORD",
+        "host": "x.x.x.x",
+        "port": "3306"
+    },
+    "secret_key": "SECRET_KEY",
+    "kakao": {
+        "api_key": "api_key",
+        "redirect_url": "redirect_url",
+        "secret_key": "secret_key",
+        "profile_uri": "profile_uri"
+    }
+}
