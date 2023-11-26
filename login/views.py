@@ -42,6 +42,8 @@ def get_kakao_access_token(code):
     user_info_res = requests.get(KAKAO_PROFILE_URI, headers=auth_headers)
     user_info_json = user_info_res.json()
 
+    print("==========================================================")
+    print(user_info_json)
     register_user(user_info_json)
 
 def register_user(user_info_json):
