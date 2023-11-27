@@ -20,12 +20,13 @@ def upload_image(request):
 
             # 이미지를 서버 로컬에 저장
             save_path = os.path.join(settings.BASE_DIR, instance.image_path)
-
             os.makedirs(os.path.dirname(save_path), exist_ok=True)
-            
             with open(save_path, 'wb') as f:
                 for chunk in request.FILES['file'].chunks():
                     f.write(chunk)
+
+            # sort_criterion을 변수에 저장
+            sort_criterion = form.cleaned_data['sort_criterion']
 
             instance.save()
             

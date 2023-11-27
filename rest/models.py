@@ -2,7 +2,7 @@ from django.db import models
 
 class UploadedImage(models.Model):
     id = models.AutoField(primary_key=True)
-    image_path = models.CharField(max_length=255)
+    image_path = models.CharField(max_length=1000)
     file_name = models.CharField(max_length=255)
     
     class Meta:
