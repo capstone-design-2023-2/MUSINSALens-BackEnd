@@ -4,6 +4,10 @@ from django.shortcuts import render, redirect
 from django.conf import settings 
 from .forms import ImageUploadForm
 import subprocess
+from .algorithm import main
+import json
+import re
+from django.http import JsonResponse
 
 def upload_image(request):
     if request.method == 'POST':
@@ -30,13 +34,18 @@ def upload_image(request):
             sort_criterion = form.cleaned_data['sort_criterion']
 
             # detectron2결과 변수에 저장
-            result = requestML(save_path) # {"category": "long_sleeve_top", "score": 0.8854095935821533, "path": "D:\\dev\\vscode\\musinsa\\MUSINSALens-BackEnd\\uploaded_images/27869c4cd00e53d5590e783ad80102db912bf8bc7d7563bdc4a048cde9124279.png"} 
+            result = requestML(save_path) # {"category": "long_sleeve_top", "score": 0.8854095935821533, "path": "D:/dev/vscode/musinsa/MUSINSALens-BackEnd/uploaded_images/27869c4cd00e53d5590e783ad80102db912bf8bc7d7563bdc4a048cde9124279.png"}
+            result_json = json.loads(result)
+            result_json['sort_criteria'] = sort_criterion # key 값에 유의
+            algorithm_result = main(result_json)
 
-            print(result)
+            algorithm_result_list = json.loads(algorithm_result)
+            algorithm_result_list_str = json.dumps(algorithm_result_list, ensure_ascii=False)
 
             instance.save()
             
-            return render(request, 'index.html', {'form': form})
+            return JsonResponse(json.loads(algorithm_result_list_str), safe=False)
+
         
     else:
         form = ImageUploadForm()
@@ -47,6 +56,14 @@ def requestML(image_path):
     current_working_directory = os.getcwd()
     print("Current Working Directory:", current_working_directory)
     print("====================================")
-    print(image_path)
+    image_path = image_path.replace('\\', '/')
     result = subprocess.run(['python', '../Detectron2/detectron2/run.py', image_path], capture_output=True, text=True)
-    return result.stdout
+
+    match = re.search(r'\{.*\}', result.stdout)
+    
+    if match:
+        json_string = match.group(0)
+        return json_string
+    else:
+        return ""
+    
