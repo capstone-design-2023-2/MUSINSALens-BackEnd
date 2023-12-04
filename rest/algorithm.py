@@ -38,7 +38,7 @@ categories = ['long_sleeve_dress', 'long_sleeve_outwear', 'long_sleeve_top', 'sh
 os.makedirs('cache', exist_ok=True)
 
 for category in categories:
-    category_dir = category + ' cache'
+    category_dir = category + '_cache'
     subfolder_path = os.path.join('cache', category_dir)
     os.makedirs(subfolder_path, exist_ok=True)
 
@@ -136,7 +136,7 @@ class Gabor(object):
         sample_cache = 'gabor'
 
         temp = os.path.join(os.getcwd(), 'cache')
-        cache_dir = category + ' cache'
+        cache_dir = category + '_cache'
 
         data_img = data['img'].tolist()
         db_img = data['img'][1:].tolist()
@@ -145,7 +145,7 @@ class Gabor(object):
             samples = pickle.load(open(os.path.join(temp, cache_dir, sample_cache), "rb", True))
             samples_img = [sample['img'] for sample in samples]
         
-        except Exception as e: #nothing in cache
+        except Exception as e: #nothing in_cache
             print(e)
             samples = []
             samples_img = []
@@ -171,7 +171,7 @@ class Gabor(object):
                             'img':  d_img, 
                             'hist': d_hist
                         })
-        sample_ca = [item for item in fin_sample if item['img'] != data['img'][0]] #db data in cache
+        sample_ca = [item for item in fin_sample if item['img'] != data['img'][0]] #db data in_cache
         pickle.dump(sample_ca, open(os.path.join(temp, cache_dir, sample_cache), "wb", True))
         return fin_sample
 
@@ -189,7 +189,7 @@ class Color(object):
         sample_cache = 'color'
 
         temp = os.path.join(os.getcwd(), 'cache')
-        cache_dir = category + ' cache'
+        cache_dir = category + '_cache'
 
         data_img = data['img'].tolist()
         db_img = data['img'][1:].tolist()
@@ -198,7 +198,7 @@ class Color(object):
             samples = pickle.load(open(os.path.join(temp, cache_dir, sample_cache), "rb", True))
             samples_img = [sample['img'] for sample in samples]
 
-        except Exception as e: #nothing in cache
+        except Exception as e: #nothing in_cache
             print(e)
             samples = []
             samples_img = []
@@ -225,7 +225,7 @@ class Color(object):
                                     'hist': d_hist
                                 })
             
-        sample_ca = [item for item in fin_sample if item['img'] != data['img'][0]] #db data in cache
+        sample_ca = [item for item in fin_sample if item['img'] != data['img'][0]] #db data in_cache
 
         pickle.dump(sample_ca, open(os.path.join(temp, cache_dir, sample_cache), "wb", True))
                 
@@ -266,7 +266,7 @@ class HistogramOfGradients(object):
         sample_cache = "hog"
 
         temp = os.path.join(os.getcwd(), 'cache')
-        cache_dir = category + ' cache'
+        cache_dir = category + '_cache'
 
         data_img = data['img'].tolist()
         db_img = data['img'][1:].tolist()
@@ -275,7 +275,7 @@ class HistogramOfGradients(object):
             samples = pickle.load(open(os.path.join(temp, cache_dir, sample_cache), "rb", True))
             samples_img = [sample['img'] for sample in samples]
 
-        except Exception as e: #nothing in cache
+        except Exception as e: #nothing in_cache
             print(e)
             samples = []
             samples_img = []
@@ -299,7 +299,7 @@ class HistogramOfGradients(object):
                                 'hist': d_hist
                             })
         
-        sample_ca = [item for item in fin_sample if item['img'] != data['img'][0]] #db data in cache
+        sample_ca = [item for item in fin_sample if item['img'] != data['img'][0]] #db data in_cache
 
         pickle.dump(sample_ca, open(os.path.join(temp, cache_dir, sample_cache), "wb", True))
 
@@ -401,7 +401,7 @@ class VGGNetFeat(object):
         sample_cache = "vgg"
     
         temp = os.path.join(os.getcwd(), 'cache')
-        cache_dir = category + ' cache'
+        cache_dir = category + '_cache'
 
         data_img = data['img'].tolist()
         db_img = data['img'][1:].tolist()
@@ -456,7 +456,7 @@ class VGGNetFeat(object):
                 except:
                     pass
 
-        sample_ca = [item for item in fin_sample if item['img'] != data['img'][0]] #db data in cache
+        sample_ca = [item for item in fin_sample if item['img'] != data['img'][0]] #db data in_cache
         pickle.dump(sample_ca, open(os.path.join(temp, cache_dir, sample_cache), "wb", True))
 
         return fin_sample
@@ -486,7 +486,7 @@ def cbir(json_string):
     print("======cbir")
 
     try:
-        connect = pymysql.connect(db='musinsaDB', user='root', password='MUSINSA_Lens_1', host='43.201.176.97', port=3306, charset='utf8', cursorclass=pymysql.cursors.DictCursor)
+        connect = pymysql.connect(db='musinsaDB', user='root', password='MUSINSA_Lens_1', host='3.38.212.123', port=3306, charset='utf8', cursorclass=pymysql.cursors.DictCursor)
         cur = connect.cursor()
     except pymysql.Error as e:
         print(f"Database connection error: {e}")
