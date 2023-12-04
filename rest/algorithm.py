@@ -541,7 +541,7 @@ def cbir(json_string):
 
 
     # print(placeholders)
-    sql = f"SELECT name, brand, price, image_url, image_path FROM product WHERE image_path IN ({placeholders})"
+    sql = f"SELECT name, brand, price, image_url, info_url FROM product WHERE image_path IN ({placeholders})"
     print("=====")
 
     try:
