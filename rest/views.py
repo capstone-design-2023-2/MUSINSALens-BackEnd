@@ -40,7 +40,9 @@ def upload_image(request):
             algorithm_result = main(result_json)
 
             algorithm_result_list = json.loads(algorithm_result)
-            algorithm_result_list_str = json.dumps(algorithm_result_list, ensure_ascii=False)
+            result_dict = {'data': algorithm_result_list}
+            
+            algorithm_result_list_str = json.dumps(result_dict, ensure_ascii=False)
 
             instance.save()
             
