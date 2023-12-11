@@ -12,6 +12,9 @@ uploaded_images
 # Backup files # 
 *.bak 
 
+# cache files #
+cache
+
 # config files #
 config.json
 
