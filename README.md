@@ -5,3 +5,6 @@
 
 ## 필요 lib
 pip3 install Pillow
+
+# cache
+- dress cache file은 모두 동일
