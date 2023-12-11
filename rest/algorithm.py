@@ -134,6 +134,7 @@ class Gabor(object):
    
     def make_samples(self, data, category, verbose=True):
         sample_cache = 'gabor'
+        print('- start gabor -')
 
         temp = os.path.join(os.getcwd(), 'cache')
         cache_dir = category + '_cache'
@@ -187,6 +188,7 @@ class Color(object):
 
     def make_samples(self, data, category, verbose=True):
         sample_cache = 'color'
+        print('- start color -')
 
         temp = os.path.join(os.getcwd(), 'cache')
         cache_dir = category + '_cache'
@@ -262,8 +264,8 @@ class HistogramOfGradients(object):
         return hist
 
     def make_samples(self, data, category, verbose=True):
-        print("==================hog==================")
         sample_cache = "hog"
+        print('- start hog -')
 
         temp = os.path.join(os.getcwd(), 'cache')
         cache_dir = category + '_cache'
@@ -398,6 +400,7 @@ def make_layers(cfg, batch_norm=False):
 class VGGNetFeat(object):
 
     def make_samples(self, data, category, verbose=True):
+        print('- start vgg -')
         sample_cache = "vgg"
     
         temp = os.path.join(os.getcwd(), 'cache')
@@ -478,12 +481,9 @@ def read_db_config(filename='config.ini', section='Database'): #config
 def cbir(json_string):
     query = json.loads(json_string)
     query = pd.DataFrame([query])
-    print(query)
 
     query_category = query['category'][0]
     query_sort = query['sort_criteria'][0]
-
-    print("======cbir")
 
     try:
         connect = pymysql.connect(db='musinsaDB', user='root', password='MUSINSA_Lens_1', host='3.38.212.123', port=3306, charset='utf8', cursorclass=pymysql.cursors.DictCursor)
@@ -496,7 +496,6 @@ def cbir(json_string):
         cur.execute(sql, query_category)
     except pymysql.Error as e:
         print(f"Database query execution error: {e}")
-
 
     db_result = cur.fetchall()
     data_category = pd.DataFrame(db_result)
@@ -523,7 +522,7 @@ def cbir(json_string):
     fin_result = pd.DataFrame({'img':[sample['img'] for sample in samples],
                                'hist': hists})
             
-    print("fin result")
+    print("========fin result========")
     print(fin_result)
     ret_list = []
 
@@ -539,10 +538,7 @@ def cbir(json_string):
     sorted_image_path = fin_result['img']
     placeholders = ', '.join(['%s'] * len(sorted_image_path))
 
-
-    # print(placeholders)
     sql = f"SELECT name, brand, price, image_url, info_url FROM product WHERE image_path IN ({placeholders})"
-    print("=====")
 
     try:
         cur.execute(sql, tuple(sorted_image_path))
