@@ -33,11 +33,29 @@ def upload_image(request):
             # sort_criterion을 변수에 저장
             sort_criterion = form.cleaned_data['sort_criterion']
 
+            ##
+            print('======== user input data ========')
+            print('save_path :' + save_path)
+            print('hashed_name :' + hashed_name)
+            print('file_name :' + instance.file_name)
+            print('sort_criterion :' + sort_criterion)
+            print('=================================\n')
+
+
+            print('======== start detectron2 ========')
             # detectron2결과 변수에 저장
             result = requestML(save_path) # {"category": "long_sleeve_top", "score": 0.8854095935821533, "path": "D:/dev/vscode/musinsa/MUSINSALens-BackEnd/uploaded_images/27869c4cd00e53d5590e783ad80102db912bf8bc7d7563bdc4a048cde9124279.png"}
             result_json = json.loads(result)
+
+            print('======== result detectron2 ========')
+            print(result_json)
+            print('===================================\n')
+
+
             result_json['sort_criteria'] = sort_criterion # key 값에 유의
+            print('======== result algorithm ========')
             algorithm_result = main(result_json)
+            print('===================================\n')
 
             algorithm_result_list = json.loads(algorithm_result)
             result_dict = {'data': algorithm_result_list}
