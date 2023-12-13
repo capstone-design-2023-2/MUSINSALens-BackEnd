@@ -169,7 +169,7 @@ class Gabor(object):
                 d_hist = self.gabor_histogram(img)
 
                 fin_sample.append({
-                            'img':  d_img, 
+                            'img':  d_img,
                             'hist': d_hist
                         })
         sample_ca = [item for item in fin_sample if item['img'] != data['img'][0]] #db data in_cache
@@ -223,7 +223,7 @@ class Color(object):
                 d_hist = self.color_histogram(img)
 
                 fin_sample.append({
-                                    'img':  d_img, 
+                                    'img':  d_img,
                                     'hist': d_hist
                                 })
             
@@ -297,7 +297,7 @@ class HistogramOfGradients(object):
                 img = cv2.imread(d_img)
                 d_hist = self.hog_histogram(img)
                 fin_sample.append({
-                                'img':  d_img, 
+                                'img':  d_img,
                                 'hist': d_hist
                             })
         
@@ -453,7 +453,7 @@ class VGGNetFeat(object):
                     d_hist = np.sum(d_hist.data.cpu().numpy(), axis=0)
                     d_hist /= np.sum(d_hist)  # normalize
                     fin_sample.append({
-                                'img':  d_img, 
+                                'img':  d_img,
                                 'hist': d_hist
                             })
                 except:
@@ -486,7 +486,7 @@ def cbir(json_string):
     query_sort = query['sort_criteria'][0]
 
     try:
-        connect = pymysql.connect(db='musinsaDB', user='root', password='MUSINSA_Lens_1', host='3.38.212.123', port=3306, charset='utf8', cursorclass=pymysql.cursors.DictCursor)
+        connect = pymysql.connect(db='musinsaDB', user='root', password='MUSINSA_Lens_1', host='54.180.98.175', port=3306, charset='utf8', cursorclass=pymysql.cursors.DictCursor)
         cur = connect.cursor()
     except pymysql.Error as e:
         print(f"Database connection error: {e}")
@@ -522,23 +522,26 @@ def cbir(json_string):
     fin_result = pd.DataFrame({'img':[sample['img'] for sample in samples],
                                'hist': hists})
             
-    print("========fin result========")
-    print(fin_result)
+    #print(fin_result)
     ret_list = []
 
     for i, histogram in enumerate(fin_result['hist']):
         ret = cv2.compareHist(fin_result.iloc[0]['hist'], histogram, cv2.HISTCMP_BHATTACHARYYA)
         ret_list.append(ret)
 
-    # print(ret_list)
+    #print(ret_list)
     fin_result['ret'] = ret_list #유사도 값
     fin_result = fin_result.sort_values(by='ret')
+    print("=================fin result=====================")
+    print(fin_result)
     fin_result = fin_result[fin_result['ret'] != 0] #쿼리 제거
 
     sorted_image_path = fin_result['img']
     placeholders = ', '.join(['%s'] * len(sorted_image_path))
 
-    sql = f"SELECT name, brand, price, image_url, info_url FROM product WHERE image_path IN ({placeholders})"
+    order_by_values = ', '.join(["'" + str(path) + "'" for path in sorted_image_path])
+    sql = f"SELECT name, brand, price, image_url, info_url FROM product WHERE image_path IN ({placeholders}) ORDER BY FIELD(image_path, {order_by_values})"
+    #sql = f"SELECT name, brand, price, image_url, info_url FROM product WHERE image_path IN ({placeholders})"
 
     try:
         cur.execute(sql, tuple(sorted_image_path))
@@ -554,7 +557,7 @@ def cbir(json_string):
     return son_result
 
 def main(request_json_dict):
-    try:    
+    try:
         # request_json_dict = {
         #     "img" : str("D:/dev/vscode/musinsa/MUSINSALens-Algorithm/test-image2.png"),
         #     "category" : "long_sleeve_top",
@@ -569,7 +572,7 @@ def main(request_json_dict):
         print(request_json_dict)
         request_json = json.dumps(request_json_dict, ensure_ascii=False)
         result = cbir(request_json)
-        # print(result)
+        #print(result)
         return result
     except Exception as e:
         print(f"An error occurred: {e}")
